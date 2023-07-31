@@ -38,7 +38,7 @@ resource "kubernetes_namespace" "postgresql" {
 
 
 resource "helm_release" "postgresql_ha" {
-  count      = var.postgresql_enabled ? 1 : 0
+  count      = var.postgresql_enabled   ? 1 : 0
   depends_on = [kubernetes_namespace.postgresql]
   name       = "postgresql-ha"
   chart      = "postgresql-ha"
@@ -58,7 +58,7 @@ resource "helm_release" "postgresql_ha" {
 }
 
 resource "helm_release" "postgres_exporter" {
-  count      = var.postgresql_enabled ? 1 : 0
+  count      = var.postgresql_enabled && var.postgresql_exporter_enabled ? 1 : 0
   depends_on = [helm_release.postgresql_ha]
   name       = "postgres-exporter"
   chart      = "prometheus-postgres-exporter"

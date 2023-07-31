@@ -16,6 +16,12 @@ variable "postgresql_enabled" {
   description = "Whether or not to deploy postgresql"
 }
 
+variable "postgresql_exporter_enabled" {
+  default     = false
+  type        = bool
+  description = "Whether or not to deploy postgresql exporter"
+}
+
 variable "postgresql_config" {
   type = any
   default = {

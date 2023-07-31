@@ -10,10 +10,11 @@ locals {
 }
 
 module "postgresql" {
-  source               = "https://github.com/sq-ia/terraform-kubernetes-postgresql.git"
+  source               = "../.." #"https://github.com/sq-ia/terraform-kubernetes-postgresql.git"
   cluster_name         = "dev-skaf"
   postgresql_namespace = "postgresql"
   postgresql_enabled   = true
+  postgresql_exporter_enabled = true
   postgresql_config = {
     replicaCount               = 3
     chart_version              = "11.7.9"
