@@ -1,0 +1,5 @@
+serviceMonitor:
+  # When set true then use a ServiceMonitor to configure scraping
+  enabled: true
+  labels:
+    release: prometheus-operator
