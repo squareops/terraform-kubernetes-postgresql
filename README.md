@@ -99,7 +99,7 @@ No modules.
 
 To report an issue with a project:
 
-  1. Check the repository's [issue tracker](https://github.com/squareops/terraform-aws-eks-addons.git/issues) on GitHub
+  1. Check the repository's [issue tracker](https://github.com/sq-ia/terraform-kubernetes-postgresql.git/issues) on GitHub
   2. Search to see if the issue has already been reported
   3. If you can't find an answer to your question in the documentation or issue tracker, you can ask a question by creating a new issue. Be sure to provide enough context and details so others can understand your problem.
 
@@ -111,7 +111,7 @@ Apache License, Version 2.0, January 2004 (http://www.apache.org/licenses/).
 
 To support a GitHub project by liking it, you can follow these steps:
 
-  1. Visit the repository: Navigate to the [GitHub repository](https://github.com/squareops/terraform-aws-eks-addons.git).
+  1. Visit the repository: Navigate to the [GitHub repository](https://github.com/sq-ia/terraform-kubernetes-postgresql.git).
 
   2. Click the "Star" button: On the repository page, you'll see a "Star" button in the upper right corner. Clicking on it will star the repository, indicating your support for the project.
 
