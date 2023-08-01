@@ -1,7 +1,7 @@
 global:
   storageClass: "${postgresql_sc}"
   postgresql:
-    username: "postgres" 
+    username: "postgres"
     password: "${postgresql_password}"
     database: ""
     repmgrUsername: "repmgr"
@@ -22,7 +22,7 @@ postgresql:
     limits:
       cpu: 1000m
       memory: 1Gi
-    requests: 
+    requests:
       cpu: 150m
       memory: 100Mi
 
@@ -42,15 +42,15 @@ pgpool:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          - key: "Infra-Services" 
+          - key: "Infra-Services"
             operator: In
             values:
             - "true"
 
 metrics:
   enabled: true
-  serviceMonitor: 
+  serviceMonitor:
     enabled: true
     namespace: "monitoring"
   labels:
-    release: "prometheus-operator" 
+    release: "prometheus-operator"

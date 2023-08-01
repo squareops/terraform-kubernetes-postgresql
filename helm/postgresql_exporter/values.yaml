@@ -1,7 +1,7 @@
 config:
   datasource:
     # Specify one of both datasource or datasourceSecret
-    host: postgresql-ha-postgresql.${namespace}.svc.cluster.local 
+    host: postgresql-ha-postgresql.${namespace}.svc.cluster.local
     user: postgres
     # Only one of password and passwordSecret can be specified
     password: ${postgresql_password}
@@ -20,4 +20,4 @@ serviceMonitor:
   # When set true then use a ServiceMonitor to configure scraping
   enabled: true
   labels:
-    release: prometheus-operator  
+    release: prometheus-operator

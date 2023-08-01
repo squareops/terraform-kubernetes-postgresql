@@ -22,7 +22,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | squareops/postgresql/kubernetes | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | https://github.com/sq-ia/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 
@@ -39,5 +39,5 @@ No inputs.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_mongodb_configuration"></a> [postgresql\_configuration](#output\_mongodb\_configuration) | Postgresql\_Info |
+| <a name="output_postgresql_configuration"></a> [postgresql\_configuration](#output\_postgresql\_configuration) | Postgresql\_Info |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
