@@ -11,7 +11,7 @@ variable "postgresql_namespace" {
 }
 
 variable "postgresql_enabled" {
-  default     = false
+  default     = true
   type        = bool
   description = "Whether or not to deploy postgresql"
 }
@@ -22,9 +22,17 @@ variable "postgresql_exporter_enabled" {
   description = "Whether or not to deploy postgresql exporter"
 }
 
+variable "recovery_window_aws_secret" {
+  type        = number
+  default     = 0
+  description = "Number of days that AWS Secrets Manager will wait before deleting a secret. This value can be set to 0 to force immediate deletion, or to a value between 7 and 30 days to allow for recovery."
+}
+
 variable "postgresql_config" {
   type = any
   default = {
+    name                       = ""
+    environment                = ""
     replicaCount               = 3
     chart_version              = "11.7.9"
     postgresql_sc              = "gp2"

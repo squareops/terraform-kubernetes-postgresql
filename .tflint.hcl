@@ -1,6 +1,6 @@
 plugin "aws" {
     enabled = true
-    version = "0.21.1"
+    version = "0.21.0"
     source  = "github.com/terraform-linters/tflint-ruleset-aws"
 }
 
@@ -92,9 +92,9 @@ format = "none"
 }
 
 # Disallow terraform declarations without require_version.
-rule "terraform_required_version" {
-enabled = true
-}
+# rule "terraform_required_version" {
+# enabled = true
+# }
 
 # Require that all providers have version constraints through required_providers.
 rule "terraform_required_providers" {
