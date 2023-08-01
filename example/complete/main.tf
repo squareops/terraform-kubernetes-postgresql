@@ -10,7 +10,7 @@ locals {
 }
 
 module "postgresql" {
-  source                      = "https://github.com/sq-ia/terraform-kubernetes-postgresql.git"
+  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
   cluster_name                = "cluster_name"
   postgresql_exporter_enabled = true
   postgresql_config = {

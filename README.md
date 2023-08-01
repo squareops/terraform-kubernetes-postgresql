@@ -18,8 +18,8 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 
 ```hcl
 module "postgresql" {
-  source               = "https://github.com/sq-ia/terraform-kubernetes-postgresql.git"
-  cluster_name         = "dev-skaf"
+  source               = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  cluster_name         = "prod-cluster"
   postgresql_exporter_enabled = true
   postgresql_config = {
     replicaCount               = 3

@@ -22,7 +22,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | https://github.com/sq-ia/terraform-kubernetes-postgresql.git | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 
