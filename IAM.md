@@ -14,39 +14,6 @@ The Policy required to deploy this module:
             "Resource": [
                 "*"
             ]
-        },
-        {
-            "Sid": "VisualEditor1",
-            "Effect": "Allow",
-            "Action": [
-                "iam:GetRole",
-                "iam:CreateRole",
-                "iam:DeleteRole",  
-                "iam:GetRolePolicy",
-                "iam:PutRolePolicy",
-                "iam:ListRolePolicies",
-                "iam:ListAttachedRolePolicies",
-                "iam:ListInstanceProfilesForRole"  
-            ],
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Sid": "VisualEditor2",
-            "Effect": "Allow",
-            "Action": [
-                "secretsmanager:CreateSecret",
-                "secretsmanager:DeleteSecret",
-                "secretsmanager:DescribeSecret",  
-                "secretsmanager:GetSecretValue",
-                "secretsmanager:PutSecretValue",
-                "secretsmanager:GetResourcePolicy"
-            ],
-            "Resource": [
-                "*"
-            ]
         }
     ]
 }
-```
