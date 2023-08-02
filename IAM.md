@@ -14,6 +14,21 @@ The Policy required to deploy this module:
             "Resource": [
                 "*"
             ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:CreateSecret",
+                "secretsmanager:DeleteSecret",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:PutSecretValue"
+            ],
+            "Resource": [
+                "*"
+            ]
         }
     ]
 }
