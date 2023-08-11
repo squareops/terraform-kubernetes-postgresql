@@ -7,7 +7,6 @@
 <br>
 This example will be very useful for users who are new to a module and want to quickly learn how to use it. By reviewing the examples, users can gain a better understanding of how the module works, what features it supports, and how to customize it to their specific needs.
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
 ## Requirements
 
 No requirements.
@@ -39,5 +38,6 @@ No inputs.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_postgresql_configuration"></a> [postgresql\_configuration](#output\_postgresql\_configuration) | Postgresql\_Info |
+| <a name="output_posgresql_credential"></a> [posgresql\_credential](#output\_posgresql\_credential) | PostgreSQL credentials used for accessing the database. |
+| <a name="output_posgresql_endpoints"></a> [posgresql\_endpoints](#output\_posgresql\_endpoints) | PostgreSQL endpoints in the Kubernetes cluster. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
