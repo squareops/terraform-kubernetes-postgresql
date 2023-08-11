@@ -1,5 +1,5 @@
 global:
-  storageClass: "${postgresql_sc}"
+  storageClass: "${storage_class}"
   postgresql:
     username: "postgres"
     password: "${postgresql_password}"
@@ -51,6 +51,6 @@ metrics:
   enabled: true
   serviceMonitor:
     enabled: true
-    namespace: "monitoring"
+    namespace: ${service_monitor_namespace}
   labels:
     release: "prometheus-operator"

@@ -9,34 +9,39 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 resource "random_password" "postgresql_password" {
-  count   = var.postgresql_enabled ? 1 : 0
+  count   = var.postgresql_custom_credentials_enabled ? 0 : 1
   length  = 20
   special = false
 }
 
 resource "random_password" "repmgrPassword" {
-  count   = var.postgresql_enabled ? 1 : 0
+  count   = var.postgresql_custom_credentials_enabled ? 0 : 1
   length  = 20
   special = false
 }
 
 resource "aws_secretsmanager_secret" "postgresql_user_password" {
-  count                   = var.postgresql_enabled ? 1 : 0
+  count                   = var.postgresql_config.store_password_to_secret_manager ? 1 : 0
   name                    = format("%s/%s/%s", var.postgresql_config.environment, var.postgresql_config.name, "postgresql")
   recovery_window_in_days = var.recovery_window_aws_secret
 }
 
 resource "aws_secretsmanager_secret_version" "postgresql_password" {
-  count         = var.postgresql_enabled ? 1 : 0
-  secret_id     = aws_secretsmanager_secret.postgresql_user_password[0].id
-  secret_string = <<EOF
-   {
-    "user": "postgres",
-    "postgres_password": "${random_password.postgresql_password[0].result}",
-    "repmgrUsername": "repmgr",
-    "repmgr_password": "${random_password.repmgrPassword[0].result}"
-   }
-EOF
+  count     = var.postgresql_config.store_password_to_secret_manager ? 1 : 0
+  secret_id = aws_secretsmanager_secret.postgresql_user_password[0].id
+  secret_string = var.postgresql_custom_credentials_enabled ? jsonencode(
+    {
+      "posgresql_username" : "postgres",
+      "postgres_password" : "${var.postgresql_custom_credentials_config.postgres_password}",
+      "repmgr_username" : "repmgr",
+      "repmgr_password" : "${var.postgresql_custom_credentials_config.repmgr_password}"
+    }) : jsonencode(
+    {
+      "posgresql_username" : "postgres",
+      "postgres_password" : "${random_password.postgresql_password[0].result}",
+      "repmgr_username" : "repmgr",
+      "repmgr_password" : "${random_password.repmgrPassword[0].result}"
+  })
 }
 
 resource "kubernetes_namespace" "postgresql" {
@@ -46,22 +51,22 @@ resource "kubernetes_namespace" "postgresql" {
   }
 }
 
-
 resource "helm_release" "postgresql_ha" {
   count      = var.postgresql_enabled ? 1 : 0
   depends_on = [kubernetes_namespace.postgresql]
   name       = "postgresql-ha"
   chart      = "postgresql-ha"
-  version    = var.postgresql_config.chart_version
+  version    = var.chart_version
   namespace  = var.postgresql_namespace
   repository = "https://charts.bitnami.com/bitnami"
   timeout    = 600
   values = [
     templatefile("${path.module}/helm/postgresql/values.yaml", {
-      replicaCount        = var.postgresql_config.replicaCount,
-      postgresql_sc       = var.postgresql_config.postgresql_sc,
-      repmgrPassword      = random_password.repmgrPassword[0].result,
-      postgresql_password = random_password.postgresql_password[0].result
+      replicaCount              = var.postgresql_config.replicaCount,
+      storage_class             = var.postgresql_config.storage_class,
+      repmgrPassword            = var.postgresql_custom_credentials_enabled ? var.postgresql_custom_credentials_config.repmgr_password : random_password.repmgrPassword[0].result,
+      postgresql_password       = var.postgresql_custom_credentials_enabled ? var.postgresql_custom_credentials_config.postgres_password : random_password.postgresql_password[0].result,
+      service_monitor_namespace = var.postgresql_namespace
     }),
     var.postgresql_config.postgresql_values
   ]
@@ -78,9 +83,8 @@ resource "helm_release" "postgres_exporter" {
   repository = "https://prometheus-community.github.io/helm-charts"
   values = [
     templatefile("${path.module}/helm/postgresql_exporter/values.yaml", {
-      postgresql_password = random_password.postgresql_password[0].result,
-      namespace           = var.postgresql_namespace
-    }),
-    var.postgresql_config.postgresql_exporter_values
+      namespace           = var.postgresql_namespace,
+      postgresql_password = var.postgresql_custom_credentials_enabled ? var.postgresql_custom_credentials_config.postgres_password : random_password.postgresql_password[0].result
+    })
   ]
 }
