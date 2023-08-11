@@ -9,13 +9,13 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 resource "random_password" "postgresql_password" {
-  count   = var.postgresql_custom_credentials_enabled ? 0 : 1
+  count   = var.custom_credentials_enabled ? 0 : 1
   length  = 20
   special = false
 }
 
 resource "random_password" "repmgrPassword" {
-  count   = var.postgresql_custom_credentials_enabled ? 0 : 1
+  count   = var.custom_credentials_enabled ? 0 : 1
   length  = 20
   special = false
 }
@@ -29,12 +29,12 @@ resource "aws_secretsmanager_secret" "postgresql_user_password" {
 resource "aws_secretsmanager_secret_version" "postgresql_password" {
   count     = var.postgresql_config.store_password_to_secret_manager ? 1 : 0
   secret_id = aws_secretsmanager_secret.postgresql_user_password[0].id
-  secret_string = var.postgresql_custom_credentials_enabled ? jsonencode(
+  secret_string = var.custom_credentials_enabled ? jsonencode(
     {
       "posgresql_username" : "postgres",
-      "postgres_password" : "${var.postgresql_custom_credentials_config.postgres_password}",
+      "postgres_password" : "${var.custom_credentials_config.postgres_password}",
       "repmgr_username" : "repmgr",
-      "repmgr_password" : "${var.postgresql_custom_credentials_config.repmgr_password}"
+      "repmgr_password" : "${var.custom_credentials_config.repmgr_password}"
     }) : jsonencode(
     {
       "posgresql_username" : "postgres",
@@ -64,8 +64,8 @@ resource "helm_release" "postgresql_ha" {
     templatefile("${path.module}/helm/postgresql/values.yaml", {
       replicaCount              = var.postgresql_config.replicaCount,
       storage_class             = var.postgresql_config.storage_class,
-      repmgrPassword            = var.postgresql_custom_credentials_enabled ? var.postgresql_custom_credentials_config.repmgr_password : random_password.repmgrPassword[0].result,
-      postgresql_password       = var.postgresql_custom_credentials_enabled ? var.postgresql_custom_credentials_config.postgres_password : random_password.postgresql_password[0].result,
+      repmgrPassword            = var.custom_credentials_enabled ? var.custom_credentials_config.repmgr_password : random_password.repmgrPassword[0].result,
+      postgresql_password       = var.custom_credentials_enabled ? var.custom_credentials_config.postgres_password : random_password.postgresql_password[0].result,
       service_monitor_namespace = var.postgresql_namespace
     }),
     var.postgresql_config.postgresql_values
@@ -84,7 +84,7 @@ resource "helm_release" "postgres_exporter" {
   values = [
     templatefile("${path.module}/helm/postgresql_exporter/values.yaml", {
       namespace           = var.postgresql_namespace,
-      postgresql_password = var.postgresql_custom_credentials_enabled ? var.postgresql_custom_credentials_config.postgres_password : random_password.postgresql_password[0].result
+      postgresql_password = var.custom_credentials_enabled ? var.custom_credentials_config.postgres_password : random_password.postgresql_password[0].result
     })
   ]
 }

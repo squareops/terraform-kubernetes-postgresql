@@ -47,13 +47,13 @@ variable "postgresql_config" {
   description = "Configuration options for the postgresql such as number of replica,chart version, storage class and store password at secret manager."
 }
 
-variable "postgresql_custom_credentials_enabled" {
+variable "custom_credentials_enabled" {
   type        = bool
   default     = false
   description = "Specifies whether to enable custom credentials for PostgreSQL database."
 }
 
-variable "postgresql_custom_credentials_config" {
+variable "custom_credentials_config" {
   type = any
   default = {
     postgres_password = ""

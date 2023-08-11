@@ -22,8 +22,8 @@ module "postgresql" {
     postgresql_values                = file("./helm/postgresql.yaml")
     store_password_to_secret_manager = local.store_password_to_secret_manager
   }
-  postgresql_custom_credentials_enabled = true
-  postgresql_custom_credentials_config = {
+  custom_credentials_enabled = true
+  custom_credentials_config = {
     postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
     repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
   }
