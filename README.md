@@ -22,9 +22,17 @@ module "postgresql" {
   cluster_name         = "prod-cluster"
   postgresql_exporter_enabled = true
   postgresql_config = {
-    replicaCount               = 3
-    postgresql_sc              = "gp2"
-    postgresql_values          = ""
+    name                             = "postgresql"
+    environment                      = "prod"
+    replicaCount                     = 3
+    storage_class                    = "gp2"
+    postgresql_values                = file("./helm/postgresql.yaml")
+    store_password_to_secret_manager = true
+  }
+  custom_credentials_enabled         = true
+  custom_credentials_config = {
+    postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
+    repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
   }
 }
 
@@ -81,8 +89,11 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of the Postgresql helm chart that will be deployed. | `string` | `"11.7.9"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of eks cluster | `string` | `""` | no |
-| <a name="input_postgresql_config"></a> [postgresql\_config](#input\_postgresql\_config) | Configuration options for the postgresql such as number of replica,chart version and storage class. | `any` | <pre>{<br>  "chart_version": "11.7.9",<br>  "environment": "",<br>  "name": "",<br>  "postgresql_exporter_values": "",<br>  "postgresql_sc": "gp2",<br>  "postgresql_values": "",<br>  "replicaCount": 3<br>}</pre> | no |
+| <a name="input_custom_credentials_config"></a> [custom\_credentials\_config](#input\_custom\_credentials\_config) | Specify the configuration settings for Postgresql to pass custom credentials during creation. | `any` | <pre>{<br>  "postgres_password": "",<br>  "repmgr_password": ""<br>}</pre> | no |
+| <a name="input_custom_credentials_enabled"></a> [custom\_credentials\_enabled](#input\_custom\_credentials\_enabled) | Specifies whether to enable custom credentials for PostgreSQL database. | `bool` | `false` | no |
+| <a name="input_postgresql_config"></a> [postgresql\_config](#input\_postgresql\_config) | Configuration options for the postgresql such as number of replica,chart version, storage class and store password at secret manager. | `map(string)` | <pre>{<br>  "environment": "",<br>  "name": "",<br>  "postgresql_values": "",<br>  "replicaCount": 3,<br>  "storage_class": "gp2",<br>  "store_password_to_secret_manager": true<br>}</pre> | no |
 | <a name="input_postgresql_enabled"></a> [postgresql\_enabled](#input\_postgresql\_enabled) | Whether or not to deploy postgresql | `bool` | `true` | no |
 | <a name="input_postgresql_exporter_enabled"></a> [postgresql\_exporter\_enabled](#input\_postgresql\_exporter\_enabled) | Whether or not to deploy postgresql exporter | `bool` | `false` | no |
 | <a name="input_postgresql_namespace"></a> [postgresql\_namespace](#input\_postgresql\_namespace) | Name of the Kubernetes namespace where the postgresql will be deployed. | `string` | `"postgresql"` | no |
@@ -92,7 +103,8 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_posgresql"></a> [posgresql](#output\_posgresql) | Postgresql\_Info |
+| <a name="output_posgresql_credential"></a> [posgresql\_credential](#output\_posgresql\_credential) | PostgreSQL credentials used for accessing the database. |
+| <a name="output_posgresql_endpoints"></a> [posgresql\_endpoints](#output\_posgresql\_endpoints) | PostgreSQL endpoints in the Kubernetes cluster. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Contribution & Issue Reporting
