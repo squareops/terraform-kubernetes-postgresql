@@ -45,7 +45,7 @@ resource "aws_secretsmanager_secret_version" "postgresql_password" {
 }
 
 resource "kubernetes_namespace" "postgresql" {
-  count = var.postgresql_enabled ? 1 : 0
+  count = var.create_namespace ? 1 : 0
   metadata {
     name = var.postgresql_namespace
   }
@@ -54,10 +54,10 @@ resource "kubernetes_namespace" "postgresql" {
 resource "helm_release" "postgresql_ha" {
   count      = var.postgresql_enabled ? 1 : 0
   depends_on = [kubernetes_namespace.postgresql]
-  name       = "postgresql-ha"
+  name       = format("%s-postgresql-ha", var.postgresql_config.environment)
   chart      = "postgresql-ha"
   version    = var.chart_version
-  namespace  = var.postgresql_namespace
+  namespace  = var.create_namespace ? var.postgresql_namespace : "default"
   repository = "https://charts.bitnami.com/bitnami"
   timeout    = 600
   values = [
@@ -66,7 +66,8 @@ resource "helm_release" "postgresql_ha" {
       storage_class             = var.postgresql_config.storage_class,
       repmgrPassword            = var.custom_credentials_enabled ? var.custom_credentials_config.repmgr_password : random_password.repmgrPassword[0].result,
       postgresql_password       = var.custom_credentials_enabled ? var.custom_credentials_config.postgres_password : random_password.postgresql_password[0].result,
-      service_monitor_namespace = var.postgresql_namespace
+      service_monitor_namespace = var.create_namespace ? var.postgresql_namespace : "default",
+      database_name             = var.postgresql_config.database_name
     }),
     var.postgresql_config.postgresql_values
   ]
@@ -79,12 +80,28 @@ resource "helm_release" "postgres_exporter" {
   chart      = "prometheus-postgres-exporter"
   version    = "4.8.0"
   timeout    = 600
-  namespace  = var.postgresql_namespace
+  namespace  = var.create_namespace ? var.postgresql_namespace : "default"
   repository = "https://prometheus-community.github.io/helm-charts"
   values = [
     templatefile("${path.module}/helm/postgresql_exporter/values.yaml", {
-      namespace           = var.postgresql_namespace,
+      namespace           = var.create_namespace ? var.postgresql_namespace : "default",
       postgresql_password = var.custom_credentials_enabled ? var.custom_credentials_config.postgres_password : random_password.postgresql_password[0].result
     })
   ]
+}
+
+resource "kubernetes_pod" "postgress-client" {
+  metadata {
+    name      = "postgress-client"
+    namespace = var.create_namespace ? var.postgresql_namespace : "default"
+  }
+
+  spec {
+    restart_policy = "Never"
+    container {
+      image   = "docker.io/bitnami/postgresql-repmgr:15.3.0-debian-11-r23"
+      name    = "postgress-client"
+      command = ["sleep", "infinity"]
+    }
+  }
 }

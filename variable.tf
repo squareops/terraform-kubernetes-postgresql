@@ -4,6 +4,12 @@ variable "cluster_name" {
   description = "Name of eks cluster"
 }
 
+variable "create_namespace" {
+  description = "enable/disable functionlaity for namespace"
+  type        = bool
+  default     = true
+}
+
 variable "postgresql_namespace" {
   default     = "postgresql"
   type        = string

@@ -2,10 +2,10 @@ output "posgresql_endpoints" {
   description = "PostgreSQL endpoints in the Kubernetes cluster."
   value = {
     postgresql_port               = "5432",
-    postgresql_ha_pgpool_endpoint = "postgresql-ha-pgpool.${var.postgresql_namespace}.svc.cluster.local",
-    postgresql_primary_endpoint   = "postgresql-ha-postgresql.${var.postgresql_namespace}.svc.cluster.local",
-    postgresql_headless_endpoint  = "postgresql-ha-postgresql-headlesss.${var.postgresql_namespace}.svc.cluster.local",
-    postgresql_metrics_endpoint   = "postgresql-ha-postgresql-metrics.${var.postgresql_namespace}.svc.cluster.local"
+    postgresql_ha_pgpool_endpoint = var.create_namespace ? "postgresql-ha-pgpool.${var.postgresql_namespace}.svc.cluster.local" : "postgresql-ha-pgpool.default.svc.cluster.local",
+    postgresql_primary_endpoint   = var.create_namespace ? "postgresql-ha-postgresql.${var.postgresql_namespace}.svc.cluster.local" : "postgresql-ha-postgresql.default.svc.cluster.local",
+    postgresql_headless_endpoint  = var.create_namespace ? "postgresql-ha-postgresql-headlesss.${var.postgresql_namespace}.svc.cluster.local" : "postgresql-ha-postgresql-headlesss.default.svc.cluster.local",
+    postgresql_metrics_endpoint   = var.create_namespace ? "postgresql-ha-postgresql-metrics.${var.postgresql_namespace}.svc.cluster.local" : "postgresql-ha-postgresql-metrics.default.svc.cluster.local"
   }
 }
 

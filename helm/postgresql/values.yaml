@@ -3,7 +3,7 @@ global:
   postgresql:
     username: "postgres"
     password: "${postgresql_password}"
-    database: ""
+    database: "${database_name}"
     repmgrUsername: "repmgr"
     repmgrPassword: "${repmgrPassword}"
     repmgrDatabase: "repmgr"
