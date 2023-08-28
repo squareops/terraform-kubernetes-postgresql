@@ -11,25 +11,28 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 
 |  Postgrsql Helm Chart Version   |     K8s supported version   |  
 | :-----:                         |         :---                 |
-| **11.7.9**                      |    **1.23,1.24,1.25,1.26**   |
+| **11.7.9**                      |    **1.23,1.24,1.25,1.26,1.27**   |
 
 
 ## Usage Example
 
 ```hcl
 module "postgresql" {
-  source               = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
-  cluster_name         = "prod-cluster"
+  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  cluster_name                = ""
+  create_namespace            = true
+  postgresql_namespace        = "postgressql"
   postgresql_exporter_enabled = true
   postgresql_config = {
-    name                             = "postgresql"
-    environment                      = "prod"
-    replicaCount                     = 3
+    name                             = local.name
+    environment                      = local.environment
+    replicaCount                     = 1
     storage_class                    = "gp2"
     postgresql_values                = file("./helm/postgresql.yaml")
-    store_password_to_secret_manager = true
+    database_name                    = "postgress_custom"
+    store_password_to_secret_manager = local.store_password_to_secret_manager
   }
-  custom_credentials_enabled         = true
+  custom_credentials_enabled = true
   custom_credentials_config = {
     postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
     repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
@@ -47,7 +50,7 @@ Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/m
   5. To deploy Prometheus/Grafana, please follow the installation instructions for each tool in their respective documentation.
   6. Once Prometheus and Grafana are deployed, the exporter can be configured to scrape metrics data from your application or system and send it to Prometheus.
   7. Finally, you can use Grafana to create custom dashboards and visualize the metrics data collected by Prometheus.
-  8. This module is compatible with EKS version 1.23,1.24,1.25 and 1.26, which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+  8. This module is compatible with EKS version 1.23,1.24,1.25,1.26,1.27 which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

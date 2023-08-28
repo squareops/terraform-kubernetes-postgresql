@@ -13,8 +13,8 @@ locals {
 module "postgresql" {
   source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
   cluster_name                = ""
-  create_namespace            = false
-  postgresql_namespace        = ""
+  create_namespace            = true
+  postgresql_namespace        = "postgressql"
   postgresql_exporter_enabled = true
   postgresql_config = {
     name                             = local.name
