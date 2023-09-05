@@ -61,3 +61,15 @@ variable "custom_credentials_config" {
   }
   description = "Specify the configuration settings for Postgresql to pass custom credentials during creation."
 }
+
+variable "postgres_password" {
+  description = "PostgresQL password"
+  default = ""
+  type = string
+}
+
+variable "repmgr_password" {
+  description = "Replication manager password"
+  default = ""
+  type = string
+}

@@ -9,7 +9,7 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 
 ## Supported Versions:
 
-|  Postgrsql Helm Chart Version   |     K8s supported version   |  
+|  Postgrsql Helm Chart Version   |     K8s supported version (EKS, AKS & GKE)  |  
 | :-----:                         |         :---                 |
 | **11.7.9**                      |    **1.23,1.24,1.25,1.26**   |
 
@@ -17,6 +17,19 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 ## Usage Example
 
 ```hcl
+module "aws" {
+  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/aws"
+  name                             = "psql"
+  environment                      = "prod"
+  cluster_name                     = "cluster-name"
+  store_password_to_secret_manager = true
+  custom_credentials_enabled       = true
+  custom_credentials_config = {
+    postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
+    repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
+  }
+}
+
 module "postgresql" {
   source               = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
   cluster_name         = "prod-cluster"
@@ -29,15 +42,14 @@ module "postgresql" {
     postgresql_values                = file("./helm/postgresql.yaml")
     store_password_to_secret_manager = true
   }
-  custom_credentials_enabled         = true
-  custom_credentials_config = {
-    postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
-    repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
-  }
+  postgres_password                = true ? "" : module.aws.postgresql_credential.postgres_password
+  repmgr_password                  = true ? "" : module.aws.postgresql_credential.repmgr_password
 }
 
 ```
-Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete) for more details.
+- Refer [AWS examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete/aws) for more details.
+- Refer [Azure examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete/azure) for more details.
+- Refer [GCP examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete/gcp) for more details.
 
 ## Important Notes
   1. In order to enable the exporter, it is required to deploy Prometheus/Grafana first.
@@ -47,13 +59,15 @@ Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/m
   5. To deploy Prometheus/Grafana, please follow the installation instructions for each tool in their respective documentation.
   6. Once Prometheus and Grafana are deployed, the exporter can be configured to scrape metrics data from your application or system and send it to Prometheus.
   7. Finally, you can use Grafana to create custom dashboards and visualize the metrics data collected by Prometheus.
-  8. This module is compatible with EKS version 1.23,1.24,1.25 and 1.26, which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+  8. This module is compatible with EKS, AKS & GKE which is great news for users deploying the module on an AWS, Azure & GCP cloud. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.23 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.71.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.13 |
 
@@ -62,6 +76,8 @@ Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/m
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.23 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.71.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.6 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.13 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
@@ -103,8 +119,8 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_posgresql_credential"></a> [posgresql\_credential](#output\_posgresql\_credential) | PostgreSQL credentials used for accessing the database. |
-| <a name="output_posgresql_endpoints"></a> [posgresql\_endpoints](#output\_posgresql\_endpoints) | PostgreSQL endpoints in the Kubernetes cluster. |
+| <a name="output_postgresql_credential"></a> [postgresql\_credential](#output\_postgresql\_credential) | PostgreSQL credentials used for accessing the database. |
+| <a name="output_postgresql_endpoints"></a> [postgresql\_endpoints](#output\_postgresql\_endpoints) | PostgreSQL endpoints in the Kubernetes cluster. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Contribution & Issue Reporting
