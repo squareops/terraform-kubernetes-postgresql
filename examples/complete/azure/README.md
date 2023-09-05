@@ -22,8 +22,8 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_azure"></a> [azure](#module\_azure) | ../../../modules/resources/azure | n/a |
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | ../../../ | n/a |
+| <a name="module_azure"></a> [azure](#module\_azure) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/azure | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 
