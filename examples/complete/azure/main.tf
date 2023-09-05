@@ -16,7 +16,7 @@ locals {
 }
 
 module "azure" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/azure"
+  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/azure"
   name                             = local.name
   environment                      = local.environment
   resource_group_name              = ""

@@ -26,13 +26,6 @@ variable "recovery_window_aws_secret" {
   description = "The recovery window (in days) for an AWS Secrets Manager secret."
 }
 
-variable "postgresql_config" {
-  description = "Configuration options for PostgreSQL."
-  default = {
-    store_password_to_secret_manager = false
-  }
-}
-
 variable "custom_credentials_config" {
   description = "Custom credentials configuration."
   default = {

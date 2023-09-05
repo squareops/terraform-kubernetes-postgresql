@@ -21,13 +21,13 @@ resource "random_password" "repmgrPassword" {
 }
 
 resource "aws_secretsmanager_secret" "postgresql_user_password" {
-  count                   = var.postgresql_config.store_password_to_secret_manager ? 1 : 0
+  count                   = var.store_password_to_secret_manager ? 1 : 0
   name                    = format("%s/%s/%s", var.environment, var.name, "postgresql")
   recovery_window_in_days = var.recovery_window_aws_secret
 }
 
 resource "aws_secretsmanager_secret_version" "postgresql_password" {
-  count     = var.postgresql_config.store_password_to_secret_manager ? 1 : 0
+  count     = var.store_password_to_secret_manager ? 1 : 0
   secret_id = aws_secretsmanager_secret.postgresql_user_password[0].id
   secret_string = var.custom_credentials_enabled ? jsonencode(
     {

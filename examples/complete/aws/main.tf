@@ -16,7 +16,7 @@ locals {
 }
 
 module "aws" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/aws"
+  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws"
   name                             = local.name
   environment                      = local.environment
   cluster_name                     = "cluster-name"
