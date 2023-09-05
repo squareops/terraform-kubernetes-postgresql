@@ -64,12 +64,12 @@ variable "custom_credentials_config" {
 
 variable "postgres_password" {
   description = "PostgresQL password"
-  default = ""
-  type = string
+  default     = ""
+  type        = string
 }
 
 variable "repmgr_password" {
   description = "Replication manager password"
-  default = ""
-  type = string
+  default     = ""
+  type        = string
 }
