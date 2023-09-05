@@ -9,35 +9,62 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 
 ## Supported Versions:
 
-|  Postgrsql Helm Chart Version   |     K8s supported version   |  
+|  Postgrsql Helm Chart Version   |     K8s supported version (EKS, AKS & GKE)  |  
 | :-----:                         |         :---                 |
-| **11.7.9**                      |    **1.23,1.24,1.25,1.26**   |
+| **11.7.9**                      |    **1.23,1.24,1.25,1.26,1.27**   |
 
 
 ## Usage Example
 
 ```hcl
-module "postgresql" {
-  source               = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
-  cluster_name         = "prod-cluster"
-  postgresql_exporter_enabled = true
-  postgresql_config = {
-    name                             = "postgresql"
-    environment                      = "prod"
-    replicaCount                     = 3
-    storage_class                    = "gp2"
-    postgresql_values                = file("./helm/postgresql.yaml")
-    store_password_to_secret_manager = true
+locals {
+  name        = "postgresql"
+  region      = "us-east-2"
+  environment = "prod"
+  additional_tags = {
+    Owner      = "organization_name"
+    Expires    = "Never"
+    Department = "Engineering"
   }
-  custom_credentials_enabled         = true
+  store_password_to_secret_manager = true
+  custom_credentials_enabled       = true
   custom_credentials_config = {
     postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
     repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
   }
 }
 
+module "aws" {
+  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/aws"
+  name                             = local.name
+  environment                      = local.environment
+  cluster_name                     = "cluster-name"
+  store_password_to_secret_manager = local.store_password_to_secret_manager
+  custom_credentials_enabled       = local.custom_credentials_enabled
+  custom_credentials_config        = local.custom_credentials_config
+}
+
+module "postgresql" {
+  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  postgresql_exporter_enabled = true
+  postgresql_config = {
+    name                             = local.name
+    environment                      = local.environment
+    replicaCount                     = 3
+    storage_class                    = "gp2"
+    postgresql_values                = ""
+    store_password_to_secret_manager = local.store_password_to_secret_manager
+    custom_credentials_enabled       = local.custom_credentials_enabled
+    custom_credentials_config        = local.custom_credentials_config
+    postgres_password                = local.custom_credentials_enabled ? "" : module.aws.postgresql_credential.postgres_password
+    repmgr_password                  = local.custom_credentials_enabled ? "" : module.aws.postgresql_credential.repmgr_password
+  }
+}
+
 ```
-Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete) for more details.
+- Refer [AWS examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete/aws) for more details.
+- Refer [Azure examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete/azure) for more details.
+- Refer [GCP examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/main/examples/complete/gcp) for more details.
 
 ## Important Notes
   1. In order to enable the exporter, it is required to deploy Prometheus/Grafana first.
@@ -47,7 +74,7 @@ Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/m
   5. To deploy Prometheus/Grafana, please follow the installation instructions for each tool in their respective documentation.
   6. Once Prometheus and Grafana are deployed, the exporter can be configured to scrape metrics data from your application or system and send it to Prometheus.
   7. Finally, you can use Grafana to create custom dashboards and visualize the metrics data collected by Prometheus.
-  8. This module is compatible with EKS version 1.23,1.24,1.25 and 1.26, which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+  8. This module is compatible with EKS, AKS & GKE which is great news for users deploying the module on an AWS, Azure & GCP cloud. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
@@ -61,10 +88,8 @@ Refer [examples](https://github.com/sq-ia/terraform-kubernetes-postgresql/tree/m
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.23 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.6 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.13 |
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
@@ -74,16 +99,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_secretsmanager_secret.postgresql_user_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
-| [aws_secretsmanager_secret_version.postgresql_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [helm_release.postgres_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.postgresql_ha](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_namespace.postgresql](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
-| [random_password.postgresql_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
-| [random_password.repmgrPassword](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
-| [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 
 ## Inputs
 
@@ -93,18 +111,20 @@ No modules.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of eks cluster | `string` | `""` | no |
 | <a name="input_custom_credentials_config"></a> [custom\_credentials\_config](#input\_custom\_credentials\_config) | Specify the configuration settings for Postgresql to pass custom credentials during creation. | `any` | <pre>{<br>  "postgres_password": "",<br>  "repmgr_password": ""<br>}</pre> | no |
 | <a name="input_custom_credentials_enabled"></a> [custom\_credentials\_enabled](#input\_custom\_credentials\_enabled) | Specifies whether to enable custom credentials for PostgreSQL database. | `bool` | `false` | no |
+| <a name="input_postgres_password"></a> [postgres\_password](#input\_postgres\_password) | PostgresQL password | `string` | `""` | no |
 | <a name="input_postgresql_config"></a> [postgresql\_config](#input\_postgresql\_config) | Configuration options for the postgresql such as number of replica,chart version, storage class and store password at secret manager. | `map(string)` | <pre>{<br>  "environment": "",<br>  "name": "",<br>  "postgresql_values": "",<br>  "replicaCount": 3,<br>  "storage_class": "gp2",<br>  "store_password_to_secret_manager": true<br>}</pre> | no |
 | <a name="input_postgresql_enabled"></a> [postgresql\_enabled](#input\_postgresql\_enabled) | Whether or not to deploy postgresql | `bool` | `true` | no |
 | <a name="input_postgresql_exporter_enabled"></a> [postgresql\_exporter\_enabled](#input\_postgresql\_exporter\_enabled) | Whether or not to deploy postgresql exporter | `bool` | `false` | no |
 | <a name="input_postgresql_namespace"></a> [postgresql\_namespace](#input\_postgresql\_namespace) | Name of the Kubernetes namespace where the postgresql will be deployed. | `string` | `"postgresql"` | no |
 | <a name="input_recovery_window_aws_secret"></a> [recovery\_window\_aws\_secret](#input\_recovery\_window\_aws\_secret) | Number of days that AWS Secrets Manager will wait before deleting a secret. This value can be set to 0 to force immediate deletion, or to a value between 7 and 30 days to allow for recovery. | `number` | `0` | no |
+| <a name="input_repmgr_password"></a> [repmgr\_password](#input\_repmgr\_password) | Replication manager password | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_posgresql_credential"></a> [posgresql\_credential](#output\_posgresql\_credential) | PostgreSQL credentials used for accessing the database. |
-| <a name="output_posgresql_endpoints"></a> [posgresql\_endpoints](#output\_posgresql\_endpoints) | PostgreSQL endpoints in the Kubernetes cluster. |
+| <a name="output_postgresql_credential"></a> [postgresql\_credential](#output\_postgresql\_credential) | PostgreSQL credentials used for accessing the database. |
+| <a name="output_postgresql_endpoints"></a> [postgresql\_endpoints](#output\_postgresql\_endpoints) | PostgreSQL endpoints in the Kubernetes cluster. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Contribution & Issue Reporting
