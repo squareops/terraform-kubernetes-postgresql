@@ -19,7 +19,7 @@ module "aws" {
   source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws"
   name                             = local.name
   environment                      = local.environment
-  cluster_name                     = "devak-skaf"
+  cluster_name                     = "cluster-name"
   store_password_to_secret_manager = local.store_password_to_secret_manager
   custom_credentials_enabled       = local.custom_credentials_enabled
   custom_credentials_config        = local.custom_credentials_config
