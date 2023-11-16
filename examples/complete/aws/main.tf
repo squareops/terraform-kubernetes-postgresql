@@ -8,7 +8,7 @@ locals {
     Department = "Engineering"
   }
   store_password_to_secret_manager = true
-  custom_credentials_enabled       = true
+  custom_credentials_enabled       = false
   custom_credentials_config = {
     postgres_password = "60rbJs901a6Oa9hzUM5x7s8Q"
     repmgr_password   = "IWHLlEYOt25jL4Io7pancB"
@@ -19,7 +19,7 @@ module "aws" {
   source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws"
   name                             = local.name
   environment                      = local.environment
-  cluster_name                     = "cluster-name"
+  cluster_name                     = "devak-skaf"
   store_password_to_secret_manager = local.store_password_to_secret_manager
   custom_credentials_enabled       = local.custom_credentials_enabled
   custom_credentials_config        = local.custom_credentials_config
@@ -35,9 +35,5 @@ module "postgresql" {
     storage_class                    = "gp2"
     postgresql_values                = file("./helm/postgresql.yaml")
     store_password_to_secret_manager = local.store_password_to_secret_manager
-    custom_credentials_enabled       = local.custom_credentials_enabled
-    custom_credentials_config        = local.custom_credentials_config
-    postgres_password                = local.custom_credentials_enabled ? "" : module.aws.postgresql_credential.postgres_password
-    repmgr_password                  = local.custom_credentials_enabled ? "" : module.aws.postgresql_credential.repmgr_password
   }
 }

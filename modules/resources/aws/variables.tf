@@ -39,3 +39,15 @@ variable "store_password_to_secret_manager" {
   type        = bool
   default     = false
 }
+
+variable "postgresql_config" {
+  description = "Custom credentials configuration."
+  default = {
+    name                             = ""
+    environment                      = ""
+    replicaCount                     = 3
+    storage_class                    = "gp2"
+    postgresql_values                = ""
+    store_password_to_secret_manager = true
+  }
+}
