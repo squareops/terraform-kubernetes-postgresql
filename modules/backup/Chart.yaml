@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A helm chart for Backup of pgsql and stored in S3
+name: pgsql-backup
+version: 1.0.0

@@ -40,4 +40,18 @@ module "postgresql" {
     postgresql_values                = file("./helm/postgresql.yaml")
     store_password_to_secret_manager = local.store_password_to_secret_manager
   }
+  iam_role_arn_backup       = module.aws.iam_role_arn_backup
+  postgresql_backup_enabled = true
+  postgresql_backup_config = {
+    bucket_name          = "backup-309017165673"
+    s3_bucket_region     = "us-east-2"
+    cron_for_full_backup = "*/5 * * * *"
+  }
+  postgresql_restore_enabled = true
+  iam_role_arn_restore       = module.aws.iam_role_arn_restore
+  postgresql_restore_config = {
+    bucket_uri       = "s3://backup-309017165673/pgdump__20231208095502.zip"
+    file_name        = "pgdump__20231208095502.zip"
+    s3_bucket_region = "us-east-2"
+  }
 }

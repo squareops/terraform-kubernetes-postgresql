@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-postgresqldb
+spec:
+  template:
+    spec:
+      serviceAccountName: sa-postgresql-restore
+      containers:
+          - name: restore-postgresqldb
+            image: squareops01/pgsqldb-restore:v2
+            imagePullPolicy: Always
+            env:
+            - name: DB_HOST
+              value: postgresql-ha-postgresql.{{ .Release.Namespace }}.svc.cluster.local
+            - name: DB_USER
+              value: {{ .Values.auth.username }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                    name: postgresql-ha-postgresql
+                    key: password
+            - name: POSTGRESQL_BUCKET_RESTORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-bucket-uri-restore
+                  key: POSTGRESQL_BUCKET_URI
+            - name: RESTORE_FILE_NAME
+              value: {{ .Values.restore.file_name}}
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.restore.aws_default_region}}
+      restartPolicy: Never
+  backoffLimit: 4

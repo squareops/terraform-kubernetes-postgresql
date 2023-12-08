@@ -1,0 +1,10 @@
+restore:
+  bucket_uri: ${bucket_uri}
+  file_name: ${file_name}
+  aws_default_region: ${s3_bucket_region}
+
+auth:
+  username: "${custom_user_username}"
+
+annotations:
+  ${annotations}
