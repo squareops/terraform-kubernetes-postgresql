@@ -73,6 +73,8 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_iam_role.pgsql_backup_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role.pgsql_restore_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_secretsmanager_secret.postgresql_user_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_version.postgresql_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [random_password.postgresql_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
@@ -90,6 +92,7 @@ No modules.
 | <a name="input_custom_credentials_enabled"></a> [custom\_credentials\_enabled](#input\_custom\_credentials\_enabled) | Set to true if you want to use custom credentials, false to generate random passwords. | `string` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | The name of the environment for resource naming. | `string` | `"dev"` | no |
 | <a name="input_name"></a> [name](#input\_name) | A name or identifier for resources. | `string` | `""` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Name of the Kubernetes namespace where the MYSQL deployment will be deployed. | `string` | `"postgresql"` | no |
 | <a name="input_recovery_window_aws_secret"></a> [recovery\_window\_aws\_secret](#input\_recovery\_window\_aws\_secret) | The recovery window (in days) for an AWS Secrets Manager secret. | `number` | `0` | no |
 | <a name="input_store_password_to_secret_manager"></a> [store\_password\_to\_secret\_manager](#input\_store\_password\_to\_secret\_manager) | Store the password to sceret manager | `bool` | `false` | no |
 
@@ -97,5 +100,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_iam_role_arn_backup"></a> [iam\_role\_arn\_backup](#output\_iam\_role\_arn\_backup) | IAM role arn for pgsql backup |
+| <a name="output_iam_role_arn_restore"></a> [iam\_role\_arn\_restore](#output\_iam\_role\_arn\_restore) | IAM role arn for pgsql restore |
 | <a name="output_postgresql_credential"></a> [postgresql\_credential](#output\_postgresql\_credential) | PostgreSQL credentials used for accessing the database. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

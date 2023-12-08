@@ -1,3 +1,11 @@
+locals {
+  oidc_provider = replace(
+    data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer,
+    "/^https:///",
+    ""
+  )
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_eks_cluster" "cluster" {
@@ -42,4 +50,89 @@ resource "aws_secretsmanager_secret_version" "postgresql_password" {
       "repmgr_username" : "repmgr",
       "repmgr_password" : "${random_password.repmgrPassword[0].result}"
   })
+}
+
+resource "aws_iam_role" "pgsql_backup_role" {
+  name = format("%s-%s-%s", var.cluster_name, var.name, "pgsql-backup")
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.oidc_provider}"
+        },
+        Action = "sts:AssumeRoleWithWebIdentity",
+        Condition = {
+          StringEquals = {
+            "${local.oidc_provider}:aud" = "sts.amazonaws.com",
+            "${local.oidc_provider}:sub" = "system:serviceaccount:${var.namespace}:sa-pgsql-backup"
+          }
+        }
+      }
+    ]
+  })
+  inline_policy {
+    name = "AllowS3PutObject"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "s3:GetObject",
+            "s3:PutObject",
+            "s3:DeleteObject",
+            "s3:ListBucket",
+            "s3:AbortMultipartUpload",
+            "s3:ListMultipartUploadParts"
+          ]
+          Effect   = "Allow"
+          Resource = "*"
+        }
+      ]
+    })
+  }
+}
+
+
+resource "aws_iam_role" "pgsql_restore_role" {
+  name = format("%s-%s-%s", var.cluster_name, var.name, "pgsql-restore")
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.oidc_provider}"
+        },
+        Action = "sts:AssumeRoleWithWebIdentity",
+        Condition = {
+          StringEquals = {
+            "${local.oidc_provider}:aud" = "sts.amazonaws.com",
+            "${local.oidc_provider}:sub" = "system:serviceaccount:${var.namespace}:sa-postgresql-restore"
+          }
+        }
+      }
+    ]
+  })
+  inline_policy {
+    name = "AllowS3PutObject"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "s3:GetObject",
+            "s3:PutObject",
+            "s3:DeleteObject",
+            "s3:ListBucket",
+            "s3:AbortMultipartUpload",
+            "s3:ListMultipartUploadParts"
+          ]
+          Effect   = "Allow"
+          Resource = "*"
+        }
+      ]
+    })
+  }
 }

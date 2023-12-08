@@ -1,0 +1,11 @@
+## Enable Full backup
+backup:
+  bucket_name: ${bucket_name}
+  aws_default_region: ${s3_bucket_region}
+  cron_for_full_backup: "${cron_for_full_backup}"
+
+annotations:
+  ${annotations}
+
+auth:
+  username: ${custom_user_username}

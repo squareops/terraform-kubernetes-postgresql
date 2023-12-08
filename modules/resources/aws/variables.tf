@@ -19,6 +19,11 @@ variable "name" {
   default     = ""
   description = "A name or identifier for resources."
 }
+variable "namespace" {
+  type        = string
+  default     = "postgresql"
+  description = "Name of the Kubernetes namespace where the MYSQL deployment will be deployed."
+}
 
 variable "recovery_window_aws_secret" {
   type        = number

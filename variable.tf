@@ -16,6 +16,12 @@ variable "postgresql_enabled" {
   description = "Whether or not to deploy postgresql"
 }
 
+variable "create_namespace" {
+  default     = true
+  type        = bool
+  description = "Whether or not to deploy postgresql"
+}
+
 variable "postgresql_exporter_enabled" {
   default     = false
   type        = bool
@@ -72,4 +78,45 @@ variable "repmgr_password" {
   description = "Replication manager password"
   default     = ""
   type        = any
+}
+
+variable "postgresql_backup_enabled" {
+  type        = bool
+  default     = false
+  description = "Specifies whether to enable backups for Pgsql database."
+}
+variable "iam_role_arn_backup" {
+  description = "IAM role ARN for backup (AWS)"
+  type        = string
+  default     = ""
+}
+
+variable "postgresql_backup_config" {
+  type = any
+  default = {
+    bucket_name          = ""
+    s3_bucket_region     = ""
+    cron_for_full_backup = ""
+  }
+  description = "configuration options for Pgsql database backups. It includes properties such as the S3 bucket Name, the S3 bucket region, and the cron expression for full backups."
+}
+variable "postgresql_restore_enabled" {
+  type        = bool
+  default     = false
+  description = "Specifies whether to enable restoring dump to the Postgresql database."
+}
+
+variable "postgresql_restore_config" {
+  type = any
+  default = {
+    bucket_uri       = ""
+    file_name        = ""
+    s3_bucket_region = ""
+  }
+  description = "Configuration options for restoring dump to the Postgresql database."
+}
+variable "iam_role_arn_restore" {
+  description = "IAM role ARN for restore (AWS)"
+  type        = string
+  default     = ""
 }

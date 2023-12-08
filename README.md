@@ -100,7 +100,9 @@ No modules.
 | Name | Type |
 |------|------|
 | [helm_release.postgres_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.postgresql_backup](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.postgresql_ha](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.postgresql_restore](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_namespace.postgresql](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 
 ## Inputs
@@ -109,13 +111,20 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of the Postgresql helm chart that will be deployed. | `string` | `"11.7.9"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of eks cluster | `string` | `""` | no |
+| <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | Whether or not to deploy postgresql | `bool` | `true` | no |
 | <a name="input_custom_credentials_config"></a> [custom\_credentials\_config](#input\_custom\_credentials\_config) | Specify the configuration settings for Postgresql to pass custom credentials during creation. | `any` | <pre>{<br>  "postgres_password": "",<br>  "repmgr_password": ""<br>}</pre> | no |
 | <a name="input_custom_credentials_enabled"></a> [custom\_credentials\_enabled](#input\_custom\_credentials\_enabled) | Specifies whether to enable custom credentials for PostgreSQL database. | `bool` | `false` | no |
+| <a name="input_iam_role_arn_backup"></a> [iam\_role\_arn\_backup](#input\_iam\_role\_arn\_backup) | IAM role ARN for backup (AWS) | `string` | `""` | no |
+| <a name="input_iam_role_arn_restore"></a> [iam\_role\_arn\_restore](#input\_iam\_role\_arn\_restore) | IAM role ARN for restore (AWS) | `string` | `""` | no |
 | <a name="input_postgres_password"></a> [postgres\_password](#input\_postgres\_password) | PostgresQL password | `any` | `""` | no |
+| <a name="input_postgresql_backup_config"></a> [postgresql\_backup\_config](#input\_postgresql\_backup\_config) | configuration options for Pgsql database backups. It includes properties such as the S3 bucket Name, the S3 bucket region, and the cron expression for full backups. | `any` | <pre>{<br>  "bucket_name": "",<br>  "cron_for_full_backup": "",<br>  "s3_bucket_region": ""<br>}</pre> | no |
+| <a name="input_postgresql_backup_enabled"></a> [postgresql\_backup\_enabled](#input\_postgresql\_backup\_enabled) | Specifies whether to enable backups for Pgsql database. | `bool` | `false` | no |
 | <a name="input_postgresql_config"></a> [postgresql\_config](#input\_postgresql\_config) | Configuration options for the postgresql such as number of replica,chart version, storage class and store password at secret manager. | `map(string)` | <pre>{<br>  "environment": "",<br>  "name": "",<br>  "postgresql_values": "",<br>  "replicaCount": 3,<br>  "storage_class": "gp2",<br>  "store_password_to_secret_manager": true<br>}</pre> | no |
 | <a name="input_postgresql_enabled"></a> [postgresql\_enabled](#input\_postgresql\_enabled) | Whether or not to deploy postgresql | `bool` | `true` | no |
 | <a name="input_postgresql_exporter_enabled"></a> [postgresql\_exporter\_enabled](#input\_postgresql\_exporter\_enabled) | Whether or not to deploy postgresql exporter | `bool` | `false` | no |
 | <a name="input_postgresql_namespace"></a> [postgresql\_namespace](#input\_postgresql\_namespace) | Name of the Kubernetes namespace where the postgresql will be deployed. | `string` | `"postgresql"` | no |
+| <a name="input_postgresql_restore_config"></a> [postgresql\_restore\_config](#input\_postgresql\_restore\_config) | Configuration options for restoring dump to the Postgresql database. | `any` | <pre>{<br>  "bucket_uri": "",<br>  "file_name": "",<br>  "s3_bucket_region": ""<br>}</pre> | no |
+| <a name="input_postgresql_restore_enabled"></a> [postgresql\_restore\_enabled](#input\_postgresql\_restore\_enabled) | Specifies whether to enable restoring dump to the Postgresql database. | `bool` | `false` | no |
 | <a name="input_recovery_window_aws_secret"></a> [recovery\_window\_aws\_secret](#input\_recovery\_window\_aws\_secret) | Number of days that AWS Secrets Manager will wait before deleting a secret. This value can be set to 0 to force immediate deletion, or to a value between 7 and 30 days to allow for recovery. | `number` | `0` | no |
 | <a name="input_repmgr_password"></a> [repmgr\_password](#input\_repmgr\_password) | Replication manager password | `any` | `""` | no |
 

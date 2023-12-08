@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-pgsqldb
+spec:
+  schedule: {{ .Values.backup.cron_for_full_backup |  quote }}
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: regcred
+          serviceAccountName: sa-pgsql-backup
+          containers:
+          - name: backup-pgsqldb
+            image:  squareops01/pgsqldb-backup:v4
+            imagePullPolicy: Always
+            env:
+            - name: DB_HOST
+              value: postgresql-ha-postgresql-headless.{{ .Release.Namespace }}.svc.cluster.local
+            - name: DB_USER
+              value: {{ .Values.auth.username }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                    name: postgresql-ha-postgresql
+                    key: password
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-bucket-name
+                  key: S3_BUCKET
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.backup.aws_default_region }}
