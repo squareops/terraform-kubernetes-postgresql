@@ -11,7 +11,7 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 
 |  Postgrsql Helm Chart Version   |     K8s supported version (EKS, AKS & GKE)  |  
 | :-----:                         |         :---                 |
-| **11.7.9**                      |    **1.23,1.24,1.25,1.26,1.27**   |
+| **13.6.1**                      |    **1.23,1.24,1.25,1.26,1.27**   |
 
 
 ## Usage Example
@@ -109,7 +109,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of the Postgresql helm chart that will be deployed. | `string` | `"11.7.9"` | no |
+| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of the Postgresql helm chart that will be deployed. | `string` | `"13.6.1"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of eks cluster | `string` | `""` | no |
 | <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | Whether or not to deploy postgresql | `bool` | `true` | no |
 | <a name="input_custom_credentials_config"></a> [custom\_credentials\_config](#input\_custom\_credentials\_config) | Specify the configuration settings for Postgresql to pass custom credentials during creation. | `any` | <pre>{<br>  "postgres_password": "",<br>  "repmgr_password": ""<br>}</pre> | no |
