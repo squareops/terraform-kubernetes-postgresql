@@ -1,7 +1,7 @@
 locals {
   name        = "postgresql"
-  region      = "us-west-2"
-  environment = "prod"
+  region      = "ap-northeast-1"
+  environment = "stg"
   additional_tags = {
     Owner      = "organization_name"
     Expires    = "Never"
@@ -16,17 +16,17 @@ locals {
 }
 
 module "aws" {
-  source                           = "../../../modules/resources/aws"
+  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/aws"
   name                             = local.name
   environment                      = local.environment
-  cluster_name                     = "prodd-eks"
+  cluster_name                     = "stg-rachit"
   store_password_to_secret_manager = local.store_password_to_secret_manager
   custom_credentials_enabled       = local.custom_credentials_enabled
   custom_credentials_config        = local.custom_credentials_config
 }
 
 module "postgresql" {
-  source                      = "../../../"
+  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
   postgresql_exporter_enabled = true
   custom_credentials_enabled  = local.custom_credentials_enabled
   custom_credentials_config   = local.custom_credentials_config
