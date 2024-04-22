@@ -1,8 +1,8 @@
 locals {
   name        = "postgresql"
-  region      = "us-east-2"
-  environment = "prodd"
-  additional_tags = {
+  region      = "ap-northeast-1"
+  environment = "stg"
+  additional_aws_tags = {
     Owner      = "organization_name"
     Expires    = "Never"
     Department = "Engineering"
@@ -16,17 +16,19 @@ locals {
 }
 
 module "aws" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws"
+  #  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws"
+  source                           = "../../../modules/resources/aws"
   name                             = local.name
   environment                      = local.environment
-  cluster_name                     = ""
+  cluster_name                     = "stg-rachit"
   store_password_to_secret_manager = local.store_password_to_secret_manager
   custom_credentials_enabled       = local.custom_credentials_enabled
   custom_credentials_config        = local.custom_credentials_config
 }
 
 module "postgresql" {
-  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  # source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  source                      = "../../../"
   postgresql_exporter_enabled = true
   custom_credentials_enabled  = local.custom_credentials_enabled
   custom_credentials_config   = local.custom_credentials_config
@@ -52,6 +54,6 @@ module "postgresql" {
   postgresql_restore_config = {
     bucket_uri       = "s3://backup-309017165673/pgdump__20231208095502.zip"
     file_name        = "pgdump__20231208095502.zip"
-    s3_bucket_region = "us-east-2"
+    s3_bucket_region = "us-west-2"
   }
 }

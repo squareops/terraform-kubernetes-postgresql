@@ -1,3 +1,9 @@
+variable "additional_aws_tags" {
+  description = "Additional tags to be applied to AWS resources"
+  type        = map(string)
+  default     = {}
+}
+
 variable "cluster_name" {
   default     = ""
   type        = string
@@ -34,9 +40,9 @@ variable "recovery_window_aws_secret" {
   description = "Number of days that AWS Secrets Manager will wait before deleting a secret. This value can be set to 0 to force immediate deletion, or to a value between 7 and 30 days to allow for recovery."
 }
 
-variable "chart_version" {
+variable "helm_chart_version" {
   type        = string
-  default     = "11.7.9"
+  default     = "13.6.1"
   description = "Version of the Postgresql helm chart that will be deployed."
 }
 
