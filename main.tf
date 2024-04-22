@@ -9,7 +9,7 @@ resource "helm_release" "postgresql_ha" {
   depends_on = [kubernetes_namespace.postgresql]
   name       = "postgresql-ha"
   chart      = "postgresql-ha"
-  version    = var.chart_version
+  version    = var.helm_chart_version
   namespace  = var.postgresql_namespace
   repository = "https://charts.bitnami.com/bitnami"
   timeout    = 600
