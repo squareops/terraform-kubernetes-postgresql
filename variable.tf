@@ -36,7 +36,7 @@ variable "recovery_window_aws_secret" {
 
 variable "chart_version" {
   type        = string
-  default     = "11.7.9"
+  default     = "14.2.11"
   description = "Version of the Postgresql helm chart that will be deployed."
 }
 

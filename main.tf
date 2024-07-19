@@ -30,7 +30,7 @@ resource "helm_release" "postgres_exporter" {
   depends_on = [helm_release.postgresql_ha]
   name       = "postgres-exporter"
   chart      = "prometheus-postgres-exporter"
-  version    = "4.8.0"
+  version    = "6.0.0"
   timeout    = 600
   namespace  = var.postgresql_namespace
   repository = "https://prometheus-community.github.io/helm-charts"
