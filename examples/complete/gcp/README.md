@@ -22,8 +22,8 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gcp"></a> [gcp](#module\_gcp) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/gcp | n/a |
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git | n/a |
+| <a name="module_gcp"></a> [gcp](#module\_gcp) | git@github.com:squareops/terraform-kubernetes-postgresql.git//modules/resources/gcp | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:squareops/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 
@@ -58,8 +58,8 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gcp"></a> [gcp](#module\_gcp) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/gcp | n/a |
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git | n/a |
+| <a name="module_gcp"></a> [gcp](#module\_gcp) | git@github.com:squareops/terraform-kubernetes-postgresql.git//modules/resources/gcp | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:squareops/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 

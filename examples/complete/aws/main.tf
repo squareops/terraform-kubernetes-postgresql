@@ -1,6 +1,6 @@
 locals {
   name        = "postgresql"
-  region      = "us-east-2"
+  region      = ""
   environment = "prodd"
   additional_tags = {
     Owner      = "organization_name"
@@ -16,7 +16,7 @@ locals {
 }
 
 module "aws" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws"
+  source                           = "../../..//modules/resources/aws"
   name                             = local.name
   environment                      = local.environment
   cluster_name                     = ""
@@ -26,7 +26,7 @@ module "aws" {
 }
 
 module "postgresql" {
-  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  source                      = "../../../"
   postgresql_exporter_enabled = true
   custom_credentials_enabled  = local.custom_credentials_enabled
   custom_credentials_config   = local.custom_credentials_config

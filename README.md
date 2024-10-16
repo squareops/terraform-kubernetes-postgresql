@@ -11,7 +11,7 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 
 |  Postgrsql Helm Chart Version   |     K8s supported version (EKS, AKS & GKE)  |  
 | :-----:                         |         :---                 |
-| **14.2.11**                      |    **1.23,1.24,1.25,1.26,1.27,1.28,1.29**   |
+| **14.2.11**                      |    **1.23,1.24,1.25,1.26,1.27,1.28,1.29,1.30**   |
 
 
 ## Usage Example
@@ -19,8 +19,8 @@ This module allows you to easily deploy a Postgresql database in HA on Kubernete
 ```hcl
 locals {
   name        = "postgresql"
-  region      = "us-east-2"
-  environment = "prod"
+  region      = ""
+  environment = "prodd"
   additional_tags = {
     Owner      = "organization_name"
     Expires    = "Never"
@@ -35,29 +35,43 @@ locals {
 }
 
 module "aws" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/aws"
+  source                           = "git@github.com:squareops/terraform-kubernetes-postgresql.git//modules/resourcces/aws"
   name                             = local.name
   environment                      = local.environment
-  cluster_name                     = "cluster-name"
+  cluster_name                     = ""
   store_password_to_secret_manager = local.store_password_to_secret_manager
   custom_credentials_enabled       = local.custom_credentials_enabled
   custom_credentials_config        = local.custom_credentials_config
 }
 
 module "postgresql" {
-  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  source                      = "git@github.com:squareops/terraform-kubernetes-postgresql.git"
   postgresql_exporter_enabled = true
+  custom_credentials_enabled  = local.custom_credentials_enabled
+  custom_credentials_config   = local.custom_credentials_config
+  repmgr_password             = module.aws.postgresql_credential.repmgr_password
+  postgres_password           = module.aws.postgresql_credential.postgres_password
   postgresql_config = {
     name                             = local.name
     environment                      = local.environment
     replicaCount                     = 3
     storage_class                    = "gp2"
-    postgresql_values                = ""
+    postgresql_values                = file("./helm/postgresql.yaml")
     store_password_to_secret_manager = local.store_password_to_secret_manager
-    custom_credentials_enabled       = local.custom_credentials_enabled
-    custom_credentials_config        = local.custom_credentials_config
-    postgres_password                = local.custom_credentials_enabled ? "" : module.aws.postgresql_credential.postgres_password
-    repmgr_password                  = local.custom_credentials_enabled ? "" : module.aws.postgresql_credential.repmgr_password
+  }
+  iam_role_arn_backup       = module.aws.iam_role_arn_backup
+  postgresql_backup_enabled = true
+  postgresql_backup_config = {
+    bucket_name          = "backup-309017165673"
+    s3_bucket_region     = "us-east-2"
+    cron_for_full_backup = "*/5 * * * *"
+  }
+  postgresql_restore_enabled = true
+  iam_role_arn_restore       = module.aws.iam_role_arn_restore
+  postgresql_restore_config = {
+    bucket_uri       = "s3://backup-309017165673/pgdump__20231208095502.zip"
+    file_name        = "pgdump__20231208095502.zip"
+    s3_bucket_region = "us-east-2"
   }
 }
 

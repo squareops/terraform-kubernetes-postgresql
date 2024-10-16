@@ -1,6 +1,6 @@
 locals {
   name        = "postgresql"
-  region      = "us-east-2"
+  region      = ""
   environment = "prod"
   additional_tags = {
     Owner      = "organization_name"
@@ -16,7 +16,7 @@ locals {
 }
 
 module "gcp" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/gcp"
+  source                           = "../../..//modules/resources/gcp"
   name                             = local.name
   environment                      = local.environment
   store_password_to_secret_manager = local.store_password_to_secret_manager
@@ -25,7 +25,7 @@ module "gcp" {
 }
 
 module "postgresql" {
-  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  source                      = "../../../"
   cluster_name                = "cluster-name"
   postgresql_exporter_enabled = true
   postgresql_config = {
