@@ -1,6 +1,6 @@
 locals {
   name        = "postgresql"
-  region      = "eastus"
+  region      = ""
   environment = "prod"
   additional_tags = {
     Owner      = "organization_name"
@@ -16,7 +16,7 @@ locals {
 }
 
 module "azure" {
-  source                           = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/azure"
+  source                           = "../../..//modules/resources/azure"
   name                             = local.name
   environment                      = local.environment
   resource_group_name              = ""
@@ -27,7 +27,7 @@ module "azure" {
 }
 
 module "postgresql" {
-  source                      = "git@github.com:sq-ia/terraform-kubernetes-postgresql.git"
+  source                      = "../../../"
   depends_on                  = [module.azure]
   postgresql_exporter_enabled = true
   postgresql_config = {

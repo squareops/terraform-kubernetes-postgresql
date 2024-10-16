@@ -21,8 +21,8 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aws"></a> [aws](#module\_aws) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resources/aws | n/a |
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git | n/a |
+| <a name="module_aws"></a> [aws](#module\_aws) | git@github.com:squareops/terraform-kubernetes-postgresql.git//modules/resources/aws | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:squareops/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 
@@ -58,8 +58,8 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aws"></a> [aws](#module\_aws) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git//modules/resourcces/aws | n/a |
-| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:sq-ia/terraform-kubernetes-postgresql.git | n/a |
+| <a name="module_aws"></a> [aws](#module\_aws) | git@github.com:squareops/terraform-kubernetes-postgresql.git//modules/resourcces/aws | n/a |
+| <a name="module_postgresql"></a> [postgresql](#module\_postgresql) | git@github.com:squareops/terraform-kubernetes-postgresql.git | n/a |
 
 ## Resources
 
